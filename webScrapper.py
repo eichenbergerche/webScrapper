@@ -1,8 +1,11 @@
-
 import requests # python3 -m pip install requests beautifulsoup4
 from bs4 import BeautifulSoup
 
-url = "https://ar.indeed.com/jobs?q=ui%20designer&l=Argentina&vjk=f93edbe75ff7c857"
+laburos = open("laburos.txt", "a")
+trabajo = input("Ingresa el trabajo que estás buscando: ").replace(" ", "%20")
+
+print(trabajo)
+url = "https://ar.indeed.com/jobs?q="+trabajo+"&"+"l=Argentina"
 
 if "__main__" == __name__:
     page = requests.get(url)
@@ -19,15 +22,13 @@ for job in results:
         salary = job.find("div", attrs={"class": "heading6 tapItem-gutter metadataContainer noJEMChips salaryOnly"})
         salary = salary.get_text() if salary else 'n/a'
             
-        job = "Titulo: {}\nEmpresa: {}\nSalario: {}\nLink: {}a\n"
+        job = "\nTitulo: {}\nEmpresa: {}\nSalario: {}\nLink: {}a\n"
 
         job = job.format(title, company, salary, joblink)
         print(job)
+        laburos.write(job)
     except Exception as e:
         print("Exception: {}".format(e))
         pass
 
-""" IMPORTANTE:
-PARA EXPORTAR A UN TXT UTILIZAR EL SIGUIENTE COMANDO:
-
-python webScrapper.py >> laburo.txt <---- ACÁ ELEGIR EL NOMBRE DE TÚ PREFERENCIA """
+laburos.close()
